@@ -115,10 +115,10 @@ window.addEventListener('load', function () {
 		let instanceClass = new Class(images, removeAddSelector)
 
 		btnPrev.addEventListener('click', function () {
-			test.slide(-1)
+			instanceClass.slide(-1)
 		})
 		btnNext.addEventListener('click', function () {
-			test.slide(1)
+			instanceClass.slide(1)
 		})
 		return instanceClass;
 	}
