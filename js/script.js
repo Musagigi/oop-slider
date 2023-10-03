@@ -1,21 +1,21 @@
 class SliderImage {
-	
+
 	index = 0
 
 	constructor(images, removeAddSelector) {
-		
+
 		this.images = images
 		this.removeAddSelector = removeAddSelector
 	}
 
-	slider(number) {
+	slide(number) {
 
 		let imageCurrent = this.getImageCurrent(number)
-		
-		this.sliderToggle(imageCurrent, this.images[this.index], this.	removeAddSelector)
+
+		this.sliderToggle(imageCurrent, this.images[this.index], this.removeAddSelector)
 	}
 
-	getImageCurrent(number) {	
+	getImageCurrent(number) {
 
 		let imageCurrent = this.images[this.index]
 		this.index += number;
@@ -39,7 +39,7 @@ class SliderImage {
 
 
 class SliderImageAnimated extends SliderImage {
-	
+
 	#isStop = false
 
 	#imgMoveToLeft = [
@@ -55,9 +55,9 @@ class SliderImageAnimated extends SliderImage {
 		super(images, removeAddSelector)
 	}
 
-	sliderAnimate(number) {
-		
-		if(this.#isStop)  {
+	slide(number) {
+
+		if (this.#isStop) {
 			return
 		}
 
@@ -67,7 +67,7 @@ class SliderImageAnimated extends SliderImage {
 		this.#sliderToggleAnimate(imageCurrent, this.images[this.index], this.removeAddSelector, isNext)
 	}
 
-	#sliderToggleAnimate(imgCurrent, imgNext, removeAddSelector, isNext) {		
+	#sliderToggleAnimate(imgCurrent, imgNext, removeAddSelector, isNext) {
 
 		this.#isStop = true
 		super.sliderToggle(imgCurrent, imgNext, removeAddSelector)
@@ -82,18 +82,19 @@ class SliderImageAnimated extends SliderImage {
 }
 
 
-class SliderImageAutoScroll extends SliderImageAnimated {
-	
-	#auto = null
+class SliderImageAutoScroll {
 
-	constructor(images, removeAddSelector) {
-		super(images, removeAddSelector)
+	#auto = null
+	// в слайдер принимаем экземпляр класса конструктора SliderImage 
+	// понятие - внедрение зависимости
+	constructor(slider) {
+		this.slider = slider
 	}
-	
-	autoScroll(number, delay, animate = null) {
+
+	autoScroll(number, delay) {
 
 		this.#auto = setInterval(() => {
-			animate ? super.sliderAnimate(number) : super.slider(number)
+			this.slider.slide(number)
 		}, delay);
 	}
 
@@ -102,43 +103,42 @@ class SliderImageAutoScroll extends SliderImageAnimated {
 	}
 }
 
+console.log(new SliderImage);
+console.log(SliderImage.prototype);
+console.log(SliderImage.prototype.constructor);
+
 window.addEventListener('load', function () {
 
-	//СЛАЙДЕР №1
-	let bntPrev = document.querySelector('.gallery-1 .buttons .prev')
-	let bntNext = document.querySelector('.gallery-1 .buttons .next')
-	let images = document.querySelectorAll('.gallery-1 .photos img')
+	function createSlider(imagesSelector, bntPrevSelector, bntNextSelector, SliderClass) {
+		let images = document.querySelectorAll(imagesSelector)
+		let btnPrev = document.querySelector(bntPrevSelector)
+		let btnNext = document.querySelector(bntNextSelector)
 
-	let test = new SliderImageAnimated(images, 'showed')
+		let test = new SliderClass(images, 'showed')
 
-	bntPrev.addEventListener('click', function () {
-		test.sliderAnimate(-1)
-	})
-	bntNext.addEventListener('click', function () {
-		test.sliderAnimate(1)
-	})
-
-	//СЛАЙДЕР №2
-	let btnPrev2 = document.querySelector('.gallery-2 .buttons .prev')
-	let btnNext2 = document.querySelector('.gallery-2 .buttons .next')
-	let images2 = document.querySelectorAll('.gallery-2 .photos img')
-
-	let test2 = new SliderImage(images2, 'showed')
-
-	btnPrev2.addEventListener('click', function () {
-		test2.slider(-1)
-	})
-	btnNext2.addEventListener('click', function () {
-		test2.slider(1)
-	})
-
-	// let test3 = new SliderImageAutoScroll(images, 'showed')
-	// test3.autoScroll(1, 1000, 'animate')
-
-	// let test4 = new SliderImageAutoScroll(images2, 'showed')
-	// test4.autoScroll(1, 1000)
-
+		btnPrev.addEventListener('click', function () {
+			test.slide(-1)
+		})
+		btnNext.addEventListener('click', function () {
+			test.slide(1)
+		})
+		return test;
+	}
 	// setTimeout(() => {
 	// 	test3.stopAutoScroll()
 	// }, 3000);
+
+
+	//СЛАЙДЕР №1
+	let simpleSlider = createSlider('.gallery-1 .photos img', '.gallery-1 .buttons .prev', '.gallery-1 .buttons .next', SliderImage)
+
+	let simpleAutoScrollSlider = new SliderImageAutoScroll(simpleSlider)
+	simpleAutoScrollSlider.autoScroll(1, 1500)
+
+
+	//СЛАЙДЕР №2
+	let animatedSlider = createSlider('.gallery-2 .photos img', '.gallery-2 .buttons .prev', '.gallery-2 .buttons .next', SliderImageAnimated)
+
+	let animateAutoScrollSlider = new SliderImageAutoScroll(animatedSlider)
+	animateAutoScrollSlider.autoScroll(1, 1000)
 });
