@@ -103,18 +103,14 @@ class SliderImageAutoScroll {
 	}
 }
 
-console.log(new SliderImage);
-console.log(SliderImage.prototype);
-console.log(SliderImage.prototype.constructor);
-
 window.addEventListener('load', function () {
 
-	function createSlider(imagesSelector, bntPrevSelector, bntNextSelector, SliderClass) {
+	function createSlider(imagesSelector, bntPrevSelector, bntNextSelector, removeAddSelector, SliderClass) {
 		let images = document.querySelectorAll(imagesSelector)
 		let btnPrev = document.querySelector(bntPrevSelector)
 		let btnNext = document.querySelector(bntNextSelector)
 
-		let test = new SliderClass(images, 'showed')
+		let test = new SliderClass(images, removeAddSelector)
 
 		btnPrev.addEventListener('click', function () {
 			test.slide(-1)
@@ -130,14 +126,14 @@ window.addEventListener('load', function () {
 
 
 	//СЛАЙДЕР №1
-	let simpleSlider = createSlider('.gallery-1 .photos img', '.gallery-1 .buttons .prev', '.gallery-1 .buttons .next', SliderImage)
+	let simpleSlider = createSlider('.gallery-1 .photos img', '.gallery-1 .buttons .prev', '.gallery-1 .buttons .next', 'showed', SliderImage)
 
 	let simpleAutoScrollSlider = new SliderImageAutoScroll(simpleSlider)
 	simpleAutoScrollSlider.autoScroll(1, 1500)
 
 
 	//СЛАЙДЕР №2
-	let animatedSlider = createSlider('.gallery-2 .photos img', '.gallery-2 .buttons .prev', '.gallery-2 .buttons .next', SliderImageAnimated)
+	let animatedSlider = createSlider('.gallery-2 .photos img', '.gallery-2 .buttons .prev', '.gallery-2 .buttons .next', 'showed', SliderImageAnimated)
 
 	let animateAutoScrollSlider = new SliderImageAutoScroll(animatedSlider)
 	animateAutoScrollSlider.autoScroll(1, 1000)
