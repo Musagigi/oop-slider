@@ -3,7 +3,6 @@ class SliderImage {
 	index = 0
 
 	constructor(images, removeAddSelector) {
-
 		this.images = images
 		this.removeAddSelector = removeAddSelector
 	}
@@ -73,6 +72,7 @@ class SliderImageAnimated extends SliderImage {
 		super.sliderToggle(imgCurrent, imgNext, removeAddSelector)
 
 		imgCurrent.animate(isNext ? this.#imgMoveToLeft : this.#imgMoveToRight, { duration: 500 })
+
 		let anim = imgNext.animate(isNext ? this.#imgMoveToRight : this.#imgMoveToLeft, { duration: 500, direction: 'reverse' })
 
 		anim.addEventListener('finish', () => {
@@ -103,14 +103,16 @@ class SliderImageAutoScroll {
 	}
 }
 
+
 window.addEventListener('load', function () {
 
-	function createSlider(imagesSelector, bntPrevSelector, bntNextSelector, removeAddSelector, SliderClass) {
+	function createSlider(imagesSelector, bntPrevSelector, bntNextSelector, removeAddSelector, Class) {
+
 		let images = document.querySelectorAll(imagesSelector)
 		let btnPrev = document.querySelector(bntPrevSelector)
 		let btnNext = document.querySelector(bntNextSelector)
 
-		let test = new SliderClass(images, removeAddSelector)
+		let instanceClass = new Class(images, removeAddSelector)
 
 		btnPrev.addEventListener('click', function () {
 			test.slide(-1)
@@ -118,7 +120,7 @@ window.addEventListener('load', function () {
 		btnNext.addEventListener('click', function () {
 			test.slide(1)
 		})
-		return test;
+		return instanceClass;
 	}
 	// setTimeout(() => {
 	// 	test3.stopAutoScroll()
